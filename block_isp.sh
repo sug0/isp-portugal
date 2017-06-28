@@ -16,9 +16,12 @@ fi
 
 for domain in `jq -r '.[] | keys[]' PortugalWebBlocking/blockList.json`
 do
-    ip=$(dig +short $domain)
-    if [[ $ip  ]]
+    ips=$(dig +short $domain | grep -viE 'timed|out')
+    if [[ $ips  ]]
     then
-        printf "%s %s.unblocked.lol\n" $(echo $ip | cut -f1 -d' ') $(echo $domain | sed s/\\./5\-/g)
+        for ip in $ips
+        do
+            printf "%s %s.unblocked.lol\n" $(echo $ip | cut -f1 -d' ') $(echo $domain | sed s/\\./5\-/g)
+        done
     fi
 done
