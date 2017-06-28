@@ -16,9 +16,9 @@ fi
 
 for domain in `jq -r '.[] | keys[]' PortugalWebBlocking/blockList.json`
 do
-    curl $domain -Isfo /dev/null
-    if [[ $? -ne 6 ]]
+    ip=$(dig +short $domain)
+    if [[ $ip  ]]
     then
-        printf "%s %s.unblocked.lol\n" $domain `echo $domain | sed s/\\\\./5\-/g`
+        printf "%s %s.unblocked.lol\n" $(echo $ip | cut -f1 -d' ') $(echo $domain | sed s/\\./5\-/g)
     fi
 done
